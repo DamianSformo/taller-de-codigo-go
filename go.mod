@@ -1,3 +1,3 @@
-module github.com/bootcamp-go/desafio-go-bases
+module taller-de-codigo-go
 
 go 1.17
