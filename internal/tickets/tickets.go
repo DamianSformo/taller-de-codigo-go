@@ -9,6 +9,7 @@ import (
 )
 
 var ErrTicketsNull = errors.New("No se encontraron Tickets")
+var ErrFileNotFind = errors.New("No se encontró el Archivo buscado")
 
 type Ticket struct {
 	id string
@@ -100,7 +101,7 @@ func ReadFile(doc string) []Ticket{
 
 	dataByte, err := os.ReadFile(doc)
 	if err != nil{
-		log.Fatal(err)
+		log.Fatal(ErrFileNotFind)
 	}
 
 	data := strings.Split(string(dataByte), "\n")
