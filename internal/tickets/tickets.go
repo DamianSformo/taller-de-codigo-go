@@ -5,7 +5,10 @@ import (
 	"os"
 	"strings"
 	"strconv"
+	"errors"
 )
+
+var ErrTicketsNull = errors.New("No se encontraron Tickets")
 
 type Ticket struct {
 	id string
@@ -16,29 +19,36 @@ type Ticket struct {
 	price string
 }
 
-// ejemplo 1
-//func GetTotalTickets(destination string) (int, error) {
-func GetTotalTickets(destination string) (int) {
-	tickets := readFile()
+type Tickets struct {
+	Tickets []Ticket
+}
+
+// ejercicio 1
+func (t *Tickets) GetTotalTickets(destination string) (int, error) {
 	count := 0;
 
-	for i:=0 ; i < len(tickets) ; i++{
-		if tickets[i].destination == destination{
+	if len(t.Tickets) < 1 {
+		return 0, ErrTicketsNull
+	}
+
+	for i:=0 ; i < len(t.Tickets) ; i++{
+		if t.Tickets[i].destination == destination{
 			count++
 		}
 	}
-	return count
+	return count, nil
 }
 
-// ejemplo 2
-//func GetMornings(time string) (int, error) {}
-func GetMornings(time string) (int) {
-	tickets := readFile()
-
+// ejercicio 2
+func (t *Tickets) GetMornings(time string) (int, error) {
 	count:= 0
 
-	for i:=0 ; i < len(tickets) ; i++{
-		t := strings.Split(string(tickets[i].time), ":")
+	if len(t.Tickets) < 1 {
+		return 0, ErrTicketsNull
+	}
+
+	for i:=0 ; i < len(t.Tickets) ; i++{
+		t := strings.Split(string(t.Tickets[i].time), ":")
 
 		h, err := strconv.Atoi(t[0]) 
 		if err != nil {
@@ -65,27 +75,30 @@ func GetMornings(time string) (int) {
 		}
 	}
 
-	return count
+	return count, nil
 }
 
-// ejemplo 3
-//func AverageDestination(destination string, total int) (int, error) {}
-func AverageDestination(destination string) (float64) {
-	tickets := readFile()
+// ejercicio 3
+func (t *Tickets) AverageDestination(destination string) (float64, error) {
 
-	quantity := float64(GetTotalTickets(destination))
-	total := float64(len(tickets))
+	quantity, error := t.GetTotalTickets(destination)
 
-	average := quantity * 100 / total
+	if error != nil {
+		return 0, ErrTicketsNull
+	}
 
-	return average
+	total := float64(len(t.Tickets))
+
+	average := float64(quantity) * 100 / total
+
+	return average, nil
 }
 
-func readFile() []Ticket{
+func ReadFile(doc string) []Ticket{
 
 	tickets := []Ticket{}
 
-	dataByte, err := os.ReadFile("tickets.csv")
+	dataByte, err := os.ReadFile(doc)
 	if err != nil{
 		log.Fatal(err)
 	}
