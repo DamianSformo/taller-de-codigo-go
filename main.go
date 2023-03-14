@@ -1,7 +1,8 @@
 package main
 
 import (
-	"taller-de-codigo-go/internal/tickets"
+	"github.com/DamianSformo/taller-de-codigo-go/internal/tickets"
+	//"taller-de-codigo-go/internal/tickets"
 	"fmt"
 	"errors"
 )
